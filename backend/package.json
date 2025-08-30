@@ -26,6 +26,7 @@
     "nodemailer": "^6.10.1"
   },
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "nodemon": "^3.1.10"
   }
 }
