@@ -1,231 +1,230 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import axios from "axios";
-import type { LoginInputState, CreateUserInputState } from "@/schema/userSchema";
+import type { LoginInputState, CreateUserInputState, ResetPasswordInputState } from "@/schema/userSchema";
 import { toast } from "sonner";
 
 const API_END_POINT = import.meta.env.VITE_API_END_POINT_USER || "http://localhost:3000/api/user";
 
 axios.defaults.withCredentials = true;
 
-type User = {
-    fullname: string;
-    email: string;
-    contact: number;
-    address: string;
-    city: string;
-    country: string;
-    profilePicture: string;
-    head: boolean;
-    admin: boolean;
-    isVerified: boolean;
-}
-
 type UserState = {
-    user: User | null;
-    allUsers: any[] | null;
-    isAuthenticated: boolean;
-    isCheckingAuth: boolean;
-    loading: boolean;
-    signup: (input: CreateUserInputState) => Promise<void>;
-    login: (input: LoginInputState) => Promise<void>;
-    verifyEmail: (verificationCode: string) => Promise<void>;
-    checkAuthentication: () => Promise<void>;
-    logout: () => Promise<void>;
-    forgotPassword: (email: string) => Promise<void>;
-    resetPassword: (input: any) => Promise<void>;
-    updateProfile: (input: any) => Promise<void>;
-    fetchAllUsers: () => Promise<void>;
-    updateUsers: (input: any) => Promise<void>;
-}
+  user: CreateUserInputState | null;
+  allUsers: CreateUserInputState[] | null;
+  isAuthenticated: boolean;
+  isCheckingAuth: boolean;
+  loading: boolean;
 
-export const useUserStore = create<UserState>()(persist((set, get) => ({
-    user: null,
-    allUsers: null,
-    isAuthenticated: false,
-    isCheckingAuth: true,
-    loading: false,
-    // signup api implementation
-    signup: async (input: SignupInputState) => {
-        try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/signup`, input, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                // console.log(response.data);
+  createUser: (input: CreateUserInputState) => Promise<void>;
+  login: (input: LoginInputState) => Promise<void>;
+  verifyEmail: (verificationCode: string) => Promise<void>;
+  checkAuthentication: () => Promise<void>;
+  logout: () => Promise<void>;
+  forgotPassword: (workEmail: string) => Promise<void>;
+  resetPassword: (input: ResetPasswordInputState) => Promise<void>;
+  updateProfile: (input: Partial<CreateUserInputState>) => Promise<void>;
+  fetchAllUsers: () => Promise<void>;
+  updateUsers: (input: Partial<CreateUserInputState>) => Promise<void>;
+};
 
-                set({
-                    loading: false,
-                    user: {
-                        ...response.data.user,
-                        isVerified: true,
-                    },
-                    isAuthenticated: true,
-                });
+export const useUserStore = create<UserState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      allUsers: null,
+      isAuthenticated: false,
+      isCheckingAuth: true,
+      loading: false,
 
-            }
-        } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
-        } finally {
-            set({ loading: false });
-        }
-    },
-    login: async (input: LoginInputState) => {
+      // Create User
+      createUser: async (input: CreateUserInputState) => {
         try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/login`, input, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+          set({ loading: true });
+          const response = await axios.post(`${API_END_POINT}/create`, input, {
+            headers: { "Content-Type": "application/json" },
+          });
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({
+              user: response.data.user,
+              isAuthenticated: true,
+              loading: false,
             });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false, user: response.data.user, isAuthenticated: true });
-            }
+          }
         } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
-        } finally {
-            set({ loading: false });
+          toast.error(error.response?.data?.message || "Failed to create user");
+          set({ loading: false });
         }
-    },
-    verifyEmail: async (verificationCode: string) => {
+      },
+
+      // Login
+      login: async (input: LoginInputState) => {
         try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/verify-email`, { verificationCode }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+          set({ loading: true });
+          const response = await axios.post(`${API_END_POINT}/login`, input, {
+            headers: { "Content-Type": "application/json" },
+          });
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({
+              user: response.data.user,
+              isAuthenticated: true,
+              loading: false,
             });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false, user: response.data.user, isAuthenticated: true });
-            }
+          }
         } catch (error: any) {
-            toast.success(error.response.data.message);
-            set({ loading: false });
-        } finally {
-            set({ loading: false });
+          toast.error(error.response?.data?.message || "Login failed");
+          set({ loading: false });
         }
-    },
-    checkAuthentication: async () => {
+      },
+
+      // Verify Email
+      verifyEmail: async (verificationCode: string) => {
         try {
-            set({ isCheckingAuth: true });
-            const response = await axios.get(`${API_END_POINT}/check-auth`);
-            if (response.data.success) {
-                set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
-            }
-        } catch (error) {
+          set({ loading: true });
+          const response = await axios.post(
+            `${API_END_POINT}/verify-email`,
+            { verificationCode },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({
+              user: response.data.user,
+              isAuthenticated: true,
+              loading: false,
+            });
+          }
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Email verification failed");
+          set({ loading: false });
+        }
+      },
+
+      // Check Auth
+      checkAuthentication: async () => {
+        try {
+          set({ isCheckingAuth: true });
+          const response = await axios.get(`${API_END_POINT}/check-auth`);
+          if (response.data.success) {
+            set({
+              user: response.data.user,
+              isAuthenticated: true,
+              isCheckingAuth: false,
+            });
+          } else {
             set({ isAuthenticated: false, isCheckingAuth: false });
+          }
+        } catch {
+          set({ isAuthenticated: false, isCheckingAuth: false });
         }
-    },
-    logout: async () => {
+      },
+
+      // Logout
+      logout: async () => {
         try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/logout`);
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false, user: null, isAuthenticated: false })
-            }
+          set({ loading: true });
+          const response = await axios.post(`${API_END_POINT}/logout`);
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({ user: null, isAuthenticated: false, loading: false });
+          }
         } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
+          toast.error(error.response?.data?.message || "Logout failed");
+          set({ loading: false });
+        }
+      },
+
+      // Forgot Password
+      forgotPassword: async (workEmail: string) => {
+        try {
+          set({ loading: true });
+          const response = await axios.post(`${API_END_POINT}/forgot-password`, {
+            workEmail,
+          });
+          if (response.data.success) {
+            toast.success(response.data.message);
+          }
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Request failed");
         } finally {
-            set({ loading: false });
+          set({ loading: false });
         }
-    },
-    forgotPassword: async (email: string) => {
+      },
+
+      // Reset Password
+      resetPassword: async (input: ResetPasswordInputState) => {
         try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/forgot-password`, { email });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false });
-            }
+          set({ loading: true });
+          const response = await axios.post(
+            `${API_END_POINT}/reset-password`,
+            input,
+            { headers: { "Content-Type": "application/json" } }
+          );
+          if (response.data.success) {
+            toast.success(response.data.message);
+          }
         } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
+          toast.error(error.response?.data?.message || "Reset failed");
         } finally {
-            set({ loading: false });
+          set({ loading: false });
         }
-    },
-    resetPassword: async (input: any) => {
+      },
+
+      // Update Profile
+      updateProfile: async (input: Partial<CreateUserInputState>) => {
         try {
-            set({ loading: true });
-            const response = await axios.post(`${API_END_POINT}/reset-password`, input, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false });
-            }
+          const response = await axios.put(
+            `${API_END_POINT}/profile/update`,
+            input,
+            { headers: { "Content-Type": "application/json" } }
+          );
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({ user: response.data.user, isAuthenticated: true });
+          }
         } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
+          toast.error(error.response?.data?.message || "Update failed");
+        }
+      },
+
+      // Fetch All Users
+      fetchAllUsers: async () => {
+        try {
+          set({ loading: true });
+          const response = await axios.get(`${API_END_POINT}/all-users`);
+          if (response.data.success) {
+            set({ allUsers: response.data.allUsers, loading: false });
+          }
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Fetching users failed");
+          set({ loading: false });
+        }
+      },
+
+      // Update Users
+      updateUsers: async (input: Partial<CreateUserInputState>) => {
+        try {
+          set({ loading: true });
+          const response = await axios.put(
+            `${API_END_POINT}/update-users`,
+            input,
+            { headers: { "Content-Type": "application/json" } }
+          );
+          if (response.data.success) {
+            toast.success(response.data.message);
+            await get().fetchAllUsers();
+          }
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Updating users failed");
         } finally {
-            set({ loading: false });
+          set({ loading: false });
         }
-    },
-    updateProfile: async (input: any) => {
-        try {
-            const response = await axios.put(`${API_END_POINT}/profile/update`, input, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ user: response.data.user, isAuthenticated: true });
-            }
-        } catch (error: any) {
-            toast.error(error.response.data.message);
-        }
-    },
-    fetchAllUsers: async () => {
-        try {
-            set({ loading: true });
-            const response = await axios.get(`${API_END_POINT}/all-users`);
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false, allUsers: response.data.allUsers });
-            }
-        } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
-        } finally {
-            set({ loading: false });
-        }
-    },
-    updateUsers: async (input: any) => {
-        try {
-            set({ loading: true });
-            const response = await axios.put(`${API_END_POINT}/update-users`, input, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.success) {
-                toast.success(response.data.message);
-                set({ loading: false });
-                await get().fetchAllUsers();
-            }
-        } catch (error: any) {
-            toast.error(error.response.data.message);
-            set({ loading: false });
-        } finally {
-            set({ loading: false });
-        }
-    },
-}),
+      },
+    }),
     {
-        name: 'user-name',
-        storage: createJSONStorage(() => localStorage),
+      name: "user-store",
+      storage: createJSONStorage(() => localStorage),
     }
-))
+  )
+);
