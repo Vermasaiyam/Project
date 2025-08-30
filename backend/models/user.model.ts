@@ -88,14 +88,14 @@ export interface IUser {
   department: string;
   designation: string;
   employmentType: "Full-time" | "Part-time" | "Intern" | "Contract";
-  workLocation: string;
+  workLocation?: string;
   reportingManagerId?: string;
 
   // Identity & Compliance
   aadharCardNumber: string;
-  aadharCardImage: string;
+  aadharCardImage?: string;
   panCardNumber: string;
-  panCardImage: string;
+  panCardImage?: string;
   passportNumber?: string;
   passportExpiry?: Date;
   drivingLicenseNumber?: string;
@@ -139,7 +139,7 @@ const userSchema = new mongoose.Schema<IUserDocument>(
     middleName: { type: String },
     lastName: { type: String, required: true },
     personalEmail: { type: String, required: true, unique: true },
-    workEmail: { type: String },
+    workEmail: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     contactNumber: { type: Number, required: true },
     workPhone: { type: Number },
@@ -154,14 +154,14 @@ const userSchema = new mongoose.Schema<IUserDocument>(
       enum: ["Full-time", "Part-time", "Intern", "Contract"],
       required: true,
     },
-    workLocation: { type: String, required: true },
+    workLocation: { type: String },
     reportingManagerId: { type: String },
 
     // Identity
     aadharCardNumber: { type: String, required: true },
-    aadharCardImage: { type: String, required: true },
+    aadharCardImage: { type: String },
     panCardNumber: { type: String, required: true },
-    panCardImage: { type: String, required: true },
+    panCardImage: { type: String },
     passportNumber: { type: String },
     passportExpiry: { type: Date },
     drivingLicenseNumber: { type: String },
