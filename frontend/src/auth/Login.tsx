@@ -5,7 +5,7 @@ import { Loader2, LockKeyhole, Mail } from "lucide-react"
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom"
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { userLoginSchema } from "@/schema/userSchema"
 import type { LoginInputState } from "@/schema/userSchema"
 import { useUserStore } from "@/store/useUserStore"
@@ -101,7 +101,7 @@ const Login = () => {
                                 handleClick();
                             }}
                         >
-                            {show ? <ViewOffIcon /> : <ViewIcon />}
+                            {show ? <IoEyeOff /> : <IoEye />}
                         </button>
                     </div>
                 </div>
@@ -130,8 +130,8 @@ const Login = () => {
                 <Separator />
                 <p className="mt-4 text-center">
                     Don't have an account?{" "}
-                    <Link to="/signup" className="text-blue-500">
-                        Signup
+                    <Link to="/create-user" className="text-blue-500">
+                        Create User
                     </Link>
                 </p>
             </form>

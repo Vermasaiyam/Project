@@ -40,7 +40,7 @@ export const useUserStore = create<UserState>()(
       createUser: async (input: CreateUserInputState) => {
         try {
           set({ loading: true });
-          const response = await axios.post(`${API_END_POINT}/create`, input, {
+          const response = await axios.post(`${API_END_POINT}/create-user`, input, {
             headers: { "Content-Type": "application/json" },
           });
           if (response.data.success) {
