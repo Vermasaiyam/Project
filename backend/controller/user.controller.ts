@@ -82,6 +82,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationToken = generateVerificationCode();
 
     const user = await User.create({
       employeeCode,
@@ -93,6 +94,8 @@ export const createUser = async (req: Request, res: Response) => {
       password: hashedPassword,
       contactNumber,
       workPhone,
+      verificationToken,
+      verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
       address,
       city,
       country,
@@ -129,6 +132,15 @@ export const createUser = async (req: Request, res: Response) => {
 
       leaveBalance: companyLeaves,
     });
+    generateToken(res, user);
+
+    const message = `your verification code is :-\n${verificationToken} `;
+    await sendEmail({
+        email: user.workEmail,
+        subject: `HR Portal - Verification Code.`,
+        message,
+        verificationToken,
+    })
 
     const userWithoutPassword = await User.findById(user._id).select("-password");
 
