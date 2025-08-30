@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 import { Loader2, LockKeyhole, Mail } from "lucide-react"
 import { useState } from "react";
 import type { ChangeEvent } from "react";
@@ -127,13 +126,6 @@ const Login = () => {
                         </Link>
                     </div>
                 </div>
-                <Separator />
-                <p className="mt-4 text-center">
-                    Don't have an account?{" "}
-                    <Link to="/create-user" className="text-blue-500">
-                        Create User
-                    </Link>
-                </p>
             </form>
         </div>
     )

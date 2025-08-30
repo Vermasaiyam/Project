@@ -217,7 +217,7 @@ const CreateUser = () => {
                       i < step 
                         ? 'bg-green-500 text-white' 
                         : i === step 
-                        ? 'bg-blue-500 text-white shadow-lg scale-110' 
+                        ? 'bg-blue-500 text-white shadow-lg scale-110'
                         : 'bg-gray-200 dark:bg-gray-700 text-gray-400'
                     }`}>
                       {i < step ? <CheckCircle2 size={20} /> : <Icon size={20} />}
