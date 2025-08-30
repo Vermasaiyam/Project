@@ -99,6 +99,7 @@ export const createUserSchema = z.object({
   employmentType: z.enum(["Full-time", "Part-time", "Intern", "Contract"]),
   workLocation: z.string().optional(),
   reportingManagerId: z.string().optional(),
+  isVerified: z.boolean().default(false),
 
   // Identity
   aadharCardNumber: z.string().min(12, "Invalid Aadhar number."),
