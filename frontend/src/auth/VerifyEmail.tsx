@@ -10,8 +10,6 @@ const VerifyEmail = () => {
     const inputRef = useRef<any>([]);
     const navigate = useNavigate();
 
-    // const loading = false;
-
     const {verifyEmail, loading} = useUserStore();
 
     const handleChange = (index: number, value: string) => {
@@ -65,7 +63,7 @@ const VerifyEmail = () => {
                                 return (
                                     <Input
                                         key={index}
-                                        ref={(element) => inputRef.current[index] = element}
+                                        ref={(element) => {inputRef.current[index] = element}}
                                         type="text"
                                         value={letter}
                                         className="md:h-12 md:w-12 w-10 h-10 text-center text-sm md:text-2xl font-normal md:font-semibold rounded-lg focus-outline-none focus-ring-2 focus:ring-indigo-500"

@@ -4,7 +4,8 @@ import { Eye, EyeOff, Loader2, LockKeyholeIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "@/store/useUserStore"
-import { ResetPasswordInputState, userResetPasswordSchema } from "@/schema/userSchema";
+import { userResetPasswordSchema } from "@/schema/userSchema";
+import type { ResetPasswordInputState } from "@/schema/userSchema";
 
 
 const ResetPassword = () => {
@@ -36,7 +37,7 @@ const ResetPassword = () => {
 
         const result = userResetPasswordSchema.safeParse(input);
         if (!result.success) {
-            const fieldErrors = result.error.formErrors.fieldErrors;
+            const fieldErrors = result.error.flatten().fieldErrors;
             setErrors(fieldErrors as Partial<ResetPasswordInputState>);
             return;
         }

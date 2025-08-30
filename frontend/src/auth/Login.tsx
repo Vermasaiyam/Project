@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Loader2, LockKeyhole, Mail } from "lucide-react"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react";
+import type { ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { LoginInputState, userLoginSchema } from "@/schema/userSchema"
+import { userLoginSchema } from "@/schema/userSchema"
+import type { LoginInputState } from "@/schema/userSchema"
 import { useUserStore } from "@/store/useUserStore"
 
 
@@ -18,10 +20,9 @@ const Login = () => {
     const [errors, setErrors] = useState<Partial<LoginInputState>>({});
 
     const { login, loading } = useUserStore();
-    // const loading = false;
 
     const [input, setInput] = useState<LoginInputState>({
-        email: "",
+        workEmail: "",
         password: "",
     });
 
@@ -32,11 +33,10 @@ const Login = () => {
 
     const loginSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        // console.log(input);
 
         const result = userLoginSchema.safeParse(input);
         if (!result.success) {
-            const fieldErrors = result.error.formErrors.fieldErrors;
+            const fieldErrors = result.error.flatten().fieldErrors;
             setErrors(fieldErrors as Partial<LoginInputState>)
             return;
         }
@@ -63,14 +63,14 @@ const Login = () => {
                             type="email"
                             placeholder="Email"
                             name="email"
-                            value={input.email}
+                            value={input.workEmail}
                             onChange={changeEventHandler}
                             className="pl-10 focus-visible:ring-1"
                             required
                         />
                         <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
                         {errors && (
-                            <span className="text-xs text-red-500">{errors.email}</span>
+                            <span className="text-xs text-red-500">{errors.workEmail}</span>
                         )}
                     </div>
                 </div>
@@ -84,11 +84,11 @@ const Login = () => {
                             onChange={changeEventHandler}
                             className="pl-10 focus-visible:ring-1 user-select-none"
                             required
-                            onCopy={(e) => e.preventDefault()}   // Disable copying
-                            onPaste={(e) => e.preventDefault()}  // Disable pasting
-                            onCut={(e) => e.preventDefault()}    // Disable cutting
-                            onDragStart={(e) => e.preventDefault()} // Disable dragging
-                            draggable={false}  // Disable drag events
+                            onCopy={(e) => e.preventDefault()}
+                            onPaste={(e) => e.preventDefault()}
+                            onCut={(e) => e.preventDefault()}
+                            onDragStart={(e) => e.preventDefault()}
+                            draggable={false}
                         />
                         <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
                         {errors && (

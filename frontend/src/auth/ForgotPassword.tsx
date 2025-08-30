@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState<string>("");
-    // const loading = false;
     
     const {forgotPassword, loading} = useUserStore();
 
