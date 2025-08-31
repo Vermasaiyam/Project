@@ -4,8 +4,8 @@ import { createLeavePolicy, getCompanyLeaves, updateCompanyLeavePolicy } from ".
 
 const router = express.Router();
 
-router.route("/create-leave-policy").post(isAuthenticated, createLeavePolicy);
-router.route("/update-leave-policy").put(isAuthenticated, updateCompanyLeavePolicy);
-router.route("/get-leave-policy").put(isAuthenticated, getCompanyLeaves);
+router.route("/create").post(isAuthenticated, createLeavePolicy);
+router.route("/update").put(isAuthenticated, updateCompanyLeavePolicy);
+router.route("/").put(isAuthenticated, getCompanyLeaves);
 
 export default router;
