@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Loader2, LockKeyhole, Mail, Sparkles, Shield, Building2 } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -58,7 +57,7 @@ const Login = () => {
 
             <div className="w-full max-w-md relative z-10">
                 {/* Header */}
-                {/* <div className="text-center mb-8">
+                <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-3 mb-6">
                         <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg">
                             <Building2 className="text-white" size={32} />
@@ -68,7 +67,7 @@ const Login = () => {
                             <p className="text-sm text-gray-600 dark:text-gray-400">Employee Management System</p>
                         </div>
                     </div>
-                </div> */}
+                </div>
 
                 {/* Login Card */}
                 <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -175,31 +174,6 @@ const Login = () => {
                                     Login
                                 </Button>
                             )}
-                        </div>
-
-                        {/* Divider */}
-                        <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <Separator className="w-full" />
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                                    New to HR Portal?
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* Signup Link */}
-                        <div className="text-center">
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Don't have an account?{" "}
-                                <Link 
-                                    to="/signup" 
-                                    className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors hover:underline"
-                                >
-                                    Sign Up
-                                </Link>
-                            </p>
                         </div>
                     </form>
                 </div>
