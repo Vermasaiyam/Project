@@ -10,6 +10,7 @@ import CreateUser from "./auth/CreateUser"
 import { useEffect } from "react"
 import { useThemeStore } from "./store/useThemeStore"
 import Loading from "./components/Loading"
+import AllEmployees from "./admin/AllEmployees"
 
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
@@ -68,6 +69,10 @@ const appRouter = createBrowserRouter([
       //   path: "/",
       //   element: <LandingPage />
       // },
+      {
+        path: "/admin/all-employees",
+        element: <AllEmployees />
+      },
 
       // Under construction page
       {

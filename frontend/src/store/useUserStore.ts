@@ -8,9 +8,21 @@ const API_END_POINT = import.meta.env.VITE_API_END_POINT_USER || "http://localho
 
 axios.defaults.withCredentials = true;
 
+type UserSummary = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  workEmail: string;
+  employeeCode: string;
+  designation: string;
+  department: string;
+  status: "Active" | "On Notice" | "Resigned" | "Terminated";
+  profilePicture?: string;
+};
+
 type UserState = {
   user: CreateUserInputState | null;
-  allUsers: CreateUserInputState[] | null;
+  allUsers: UserSummary[] | null;
   isAuthenticated: boolean;
   isCheckingAuth: boolean;
   loading: boolean;

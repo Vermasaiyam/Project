@@ -431,7 +431,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const allUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-        const allUsers = await User.find().select("-password");
+        const allUsers = await User.find().select(
+            "firstName lastName workEmail employeeCode designation department status profilePicture"
+        );
 
         res.status(200).json({
             success: true,
@@ -441,5 +443,19 @@ export const allUsers = async (req: Request, res: Response): Promise<void> => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = await User.findById(req.params.id).select("-password");
+        if (!user) {
+            res.status(404).json({ success: false, message: "User not found" });
+            return;
+        }
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+         console.error(error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }

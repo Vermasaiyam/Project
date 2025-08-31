@@ -68,7 +68,7 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden lg:flex space-x-6 items-center">
           <Link to="/" className={`hover:text-hoverGreen font-medium ${isActive("/")}`}>
-            Dashboard
+            Home
           </Link>
           <Link to="/employees" className={`hover:text-hoverGreen font-medium ${isActive("/employees")}`}>
             Employees
@@ -105,6 +105,9 @@ const Navbar = () => {
                       </Link>
                       <Link to="/admin/approvals">
                         <MenubarItem className="cursor-pointer">Leave Approvals</MenubarItem>
+                      </Link>
+                      <Link to="/admin/all-employees">
+                        <MenubarItem className="cursor-pointer">All Employees</MenubarItem>
                       </Link>
                     </>
                   )}
@@ -226,10 +229,17 @@ const MobileNavbar = () => {
           <Link to="/attendance" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer font-medium">
             <BriefcaseBusiness /> <span>Attendance</span>
           </Link>
-          {user?.superAdmin && (
-            <Link to="/admin/payroll" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer font-medium">
-              <Banknote /> <span>Payroll</span>
-            </Link>
+          {(user?.superAdmin || user?.admin) && (
+            <>
+              {user?.superAdmin && (
+                <Link to="/admin/payroll" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer font-medium">
+                  <Banknote /> <span>Payroll</span>
+                </Link>
+              )}
+              <Link to="/admin/all-employees" className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer font-medium">
+                <Users2 /> <span>All Employees</span>
+              </Link>
+            </>
           )}
         </SheetDescription>
 
