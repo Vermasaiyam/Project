@@ -18,7 +18,7 @@ export const educationSchema = z.object({
 export const employmentSchema = z.object({
   organizationName: z.string().min(1, "Organization name is required."),
   designation: z.string().min(1, "Designation is required."),
-  fromDate: z.string().transform((val) => new Date(val)), // ISO string
+  fromDate: z.string().transform((val) => new Date(val)),
   toDate: z.string().transform((val) => new Date(val)).optional(),
   location: z.string().optional(),
   skills: z.array(z.string()).optional(),
