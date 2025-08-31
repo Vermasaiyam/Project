@@ -27,6 +27,7 @@ type UserState = {
   fetchAllUsers: () => Promise<void>;
   updateUsers: (input: Partial<CreateUserInputState>) => Promise<void>;
   getUserById: (id: string) => Promise<CreateUserInputState | null>;
+  deleteUserById: (id: string) => Promise<void>;
 };
 
 export const useUserStore = create<UserState>()(
@@ -252,6 +253,22 @@ export const useUserStore = create<UserState>()(
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Failed to fetch user details");
           return null;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      // delete user by id
+      deleteUserById: async (id: string) => {
+        try {
+          set({ loading: true });
+          const response = await axios.delete(`${API_END_POINT}/${id}`);
+          if (response.data.success) {
+            toast.success(response.data.message);
+            await get().fetchAllUsers();
+          }
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Failed to delete user");
         } finally {
           set({ loading: false });
         }

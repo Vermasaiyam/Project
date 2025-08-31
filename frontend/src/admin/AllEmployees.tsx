@@ -5,14 +5,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Eye, FilePenLine, Loader2, Plus, Upload, Download, FilePlus } from "lucide-react";
+import { Eye, FilePenLine, Loader2, Plus, Upload, Download, FilePlus, Trash } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { UserSummary } from "@/type/UserType";
 
 
 const AllEmployees = () => {
   const navigate = useNavigate();
-  const { allUsers, fetchAllUsers, loading } = useUserStore();
+  const { allUsers, fetchAllUsers, loading, deleteUserById } = useUserStore();
 
   useEffect(() => {
     fetchAllUsers();
@@ -89,8 +89,21 @@ const AllEmployees = () => {
         {allUsers?.map((user: UserSummary) => (
           <Card
             key={user._id}
-            className="flex flex-col justify-between hover:shadow-lg transition-shadow duration-300"
+            className="relative flex flex-col justify-between hover:shadow-lg transition-shadow duration-300"
           >
+            <Button
+              variant="destructive"
+              size="icon"
+              className="absolute top-2 right-2 p-1 rounded-full"
+              onClick={() => {
+                if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
+                  deleteUserById(user._id);
+                }
+              }}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+
             <CardHeader className="flex flex-row items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage

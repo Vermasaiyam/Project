@@ -465,3 +465,32 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
+
+export const deleteUserById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ success: false, message: "Invalid user ID" });
+      return;
+    }
+
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `User ${user.firstName} ${user.lastName} deleted successfully.`,
+    });
+  } catch (error: any) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

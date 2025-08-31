@@ -1,5 +1,5 @@
 import express from "express";
-import { allUsers, checkAuth, forgotPassword, login, logout, resetPassword, createUser, updateUser, verifyEmail, getUserById } from "../controller/user.controller";
+import { allUsers, checkAuth, forgotPassword, login, logout, resetPassword, createUser, updateUser, verifyEmail, getUserById, deleteUserById } from "../controller/user.controller";
 import { isAuthenticated } from "../middlewares/isAuthenticated";
 
 const router = express.Router();
@@ -14,5 +14,6 @@ router.route("/reset-password").post(isAuthenticated, resetPassword);
 router.route("/profile/update").put(isAuthenticated,updateUser);
 router.route("/all-users").get(isAuthenticated, allUsers);
 router.route("/:id").get(isAuthenticated, getUserById);
+router.route("/:id").delete(isAuthenticated, deleteUserById);
 
 export default router;
