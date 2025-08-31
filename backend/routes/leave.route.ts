@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.route("/create").post(isAuthenticated, createLeavePolicy);
 router.route("/update").put(isAuthenticated, updateCompanyLeavePolicy);
-router.route("/").put(isAuthenticated, getCompanyLeaves);
+router.route("/").get(isAuthenticated, getCompanyLeaves);
 
 export default router;

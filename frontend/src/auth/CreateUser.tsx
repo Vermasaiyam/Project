@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader2, User, Briefcase, Shield, GraduationCap, Building, CreditCard, Users, Calendar, CheckCircle2, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createUserSchema, type CreateUserInputState } from "@/schema/userSchema";
 import { useUserStore } from "@/store/useUserStore";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
+import { useLeavePolicyStore } from "@/store/useLeaveStore";
+import { Button } from "@/components/ui/button";
 
 type FormData = {
   [key: string]: any;
@@ -12,6 +15,16 @@ type FormData = {
   lastName?: string;
   workEmail?: string;
   department?: string;
+
+  // Leave balance fields
+  casual?: number;
+  sick?: number;
+  earned?: number;
+  compOffs?: number;
+  bereavement?: number;
+  examLeave?: number;
+  marriageLeave?: number;
+  unpaidLeave?: number;
 };
 
 type FormErrors = {
@@ -85,6 +98,38 @@ const CreateUser = () => {
 
   const { createUser, loading } = useUserStore();
   const navigate = useNavigate();
+
+  const { leavePolicy, getLeavePolicy } = useLeavePolicyStore();
+  const [useCompanyPolicy, setUseCompanyPolicy] = useState(true);
+
+  useEffect(() => {
+    if (useCompanyPolicy) {
+      const fetchPolicy = async () => {
+        await getLeavePolicy();
+      };
+      fetchPolicy();
+    }
+  }, [useCompanyPolicy, getLeavePolicy]);
+
+  useEffect(() => {
+    if (useCompanyPolicy && leavePolicy) {
+      setFormData(prev => ({
+        ...prev,
+        casual: leavePolicy.casual,
+        sick: leavePolicy.sick,
+        earned: leavePolicy.earned,
+        compOffs: leavePolicy.compOffs || 0,
+        bereavement: leavePolicy.bereavement || 0,
+        examLeave: leavePolicy.examLeave || 0,
+        marriageLeave: leavePolicy.marriageLeave || 0,
+        unpaidLeave: leavePolicy.unpaidLeave || 0,
+      }));
+    }
+  }, [leavePolicy, useCompanyPolicy]);
+
+  const handleToggleCompanyPolicy = (checked: boolean) => {
+    setUseCompanyPolicy(checked);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -166,6 +211,15 @@ const CreateUser = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="max-w-4xl mx-auto px-6 pt-6">
+        <Button
+          variant="outline"
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2"
+          >
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
+      </div>
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Progress Bar */}
         <div className="mb-8">
@@ -629,7 +683,6 @@ const CreateUser = () => {
               </div>
             )}
 
-            {/* Step 7: Leave Balance */}
             {step === 7 && (
               <div className="space-y-6 animate-in slide-in-from-right-5">
                 <div className="text-center mb-6">
@@ -637,13 +690,25 @@ const CreateUser = () => {
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Leave Balance Setup</h3>
                   <p className="text-gray-600 dark:text-gray-400">Configure initial leave balance for the employee</p>
                 </div>
-                
+
+                {/* Toggle for company policy */}
+                <div className="flex items-center gap-3 mb-4 justify-center">
+                  <Switch
+                    id="useCompanyPolicy"
+                    checked={useCompanyPolicy}
+                    onCheckedChange={handleToggleCompanyPolicy}
+                  />
+                  <label htmlFor="useCompanyPolicy" className="text-gray-700 dark:text-gray-300 font-medium">
+                    Use Company Leave Policy
+                  </label>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <InputField 
                     name="casual" 
                     placeholder="Casual Leave" 
                     type="number"
-                    value={formData.casual || '0'} 
+                    value={formData.casual?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -651,7 +716,7 @@ const CreateUser = () => {
                     name="sick" 
                     placeholder="Sick Leave" 
                     type="number"
-                    value={formData.sick || '0'} 
+                    value={formData.sick?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -659,7 +724,7 @@ const CreateUser = () => {
                     name="earned" 
                     placeholder="Earned Leave" 
                     type="number"
-                    value={formData.earned || '0'} 
+                    value={formData.earned?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -667,7 +732,7 @@ const CreateUser = () => {
                     name="compOffs" 
                     placeholder="Comp-Off" 
                     type="number"
-                    value={formData.compOffs || '0'} 
+                    value={formData.compOffs?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -675,7 +740,7 @@ const CreateUser = () => {
                     name="bereavement" 
                     placeholder="Bereavement Leave" 
                     type="number"
-                    value={formData.bereavement || '0'} 
+                    value={formData.bereavement?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -683,7 +748,7 @@ const CreateUser = () => {
                     name="examLeave" 
                     placeholder="Exam Leave" 
                     type="number"
-                    value={formData.examLeave || '0'} 
+                    value={formData.examLeave?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -691,7 +756,7 @@ const CreateUser = () => {
                     name="marriageLeave" 
                     placeholder="Marriage Leave" 
                     type="number"
-                    value={formData.marriageLeave || '0'} 
+                    value={formData.marriageLeave?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -699,7 +764,7 @@ const CreateUser = () => {
                     name="unpaidLeave" 
                     placeholder="Unpaid Leave" 
                     type="number"
-                    value={formData.unpaidLeave || '0'} 
+                    value={formData.unpaidLeave?.toString() || "0"} 
                     onChange={handleChange} 
                     errors={errors} 
                   />
@@ -716,20 +781,72 @@ const CreateUser = () => {
 
             {/* Final Review Step */}
             {step === 8 && (
-              <div className="text-center py-12 animate-in slide-in-from-right-5">
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-full w-fit mx-auto mb-4">
-                  <CheckCircle2 size={32} className="text-green-500" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Almost Done!</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">Review your information and create the employee account.</p>
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-left max-w-md mx-auto">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Summary</h4>
-                  <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                    <p>Employee Code: {formData.employeeCode || 'Not provided'}</p>
-                    <p>Name: {formData.firstName || ''} {formData.lastName || ''}</p>
-                    <p>Email: {formData.workEmail || 'Not provided'}</p>
-                    <p>Department: {formData.department || 'Not provided'}</p>
+              <div className="animate-in slide-in-from-right-5 py-12">
+                <div className="text-center mb-8">
+                  <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-full w-fit mx-auto mb-4">
+                    <CheckCircle2 size={36} className="text-green-500" />
                   </div>
+                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+                    Almost Done!
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Review all the information below before creating the employee account.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                  {/* Personal Info */}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                      Personal Information
+                    </h4>
+                    <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p><strong>Employee Code:</strong> {formData.employeeCode || "N/A"}</p>
+                      <p><strong>Name:</strong> {formData.firstName || "N/A"} {formData.lastName || "N/A"}</p>
+                      <p><strong>Email:</strong> {formData.workEmail || "N/A"}</p>
+                      <p><strong>Department:</strong> {formData.department || "N/A"}</p>
+                    </div>
+                  </div>
+
+                  {/* Leave & HR Info */}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                      HR & Leave Information
+                    </h4>
+                    <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                      <p><strong>Designation:</strong> {formData.designation || "N/A"}</p>
+                      <p><strong>Date of Joining:</strong> {formData.dateOfJoining ? new Date(formData.dateOfJoining).toLocaleDateString() : "N/A"}</p>
+                      <p><strong>Leave Balance:</strong></p>
+                      <ul className="ml-4 list-disc text-sm">
+                        <li>Casual: {formData.casual ?? 0}</li>
+                        <li>Sick: {formData.sick ?? 0}</li>
+                        <li>Earned: {formData.earned ?? 0}</li>
+                        <li>Comp-Offs: {formData.compOffs ?? 0}</li>
+                        <li>Bereavement: {formData.bereavement ?? 0}</li>
+                        <li>Exam Leave: {formData.examLeave ?? 0}</li>
+                        <li>Marriage Leave: {formData.marriageLeave ?? 0}</li>
+                        <li>Unpaid Leave: {formData.unpaidLeave ?? 0}</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Optional: Dependents / Emergency Contact */}
+                  {formData.spouseName || formData.children?.length || formData.emergencyContactName ? (
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 md:col-span-2">
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        Dependents & Emergency Contact
+                      </h4>
+                      <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <p><strong>Spouse:</strong> {formData.spouseName || "N/A"} {formData.spouseDob ? `(${new Date(formData.spouseDob).toLocaleDateString()})` : ""}</p>
+                        {formData.children?.map((child: any, idx: number) => (
+                          <p key={idx}>
+                            <strong>Child {idx + 1}:</strong> {child.name || "N/A"} | {child.gender || "N/A"} | {child.relationship || "N/A"} | {child.dob ? new Date(child.dob).toLocaleDateString() : "N/A"}
+                          </p>
+                        ))}
+                        <p><strong>Emergency Contact:</strong> {formData.emergencyContactName || "N/A"} ({formData.emergencyContactRelation || "N/A"}) - {formData.emergencyContactPhone || "N/A"}</p>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             )}

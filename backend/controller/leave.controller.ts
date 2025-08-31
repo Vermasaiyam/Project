@@ -38,7 +38,7 @@ export const createLeavePolicy = async (req: Request, res: Response) => {
     return res.status(201).json({
       success: true,
       message: "Company leave policy created successfully",
-      data: leavePolicy,
+      leavePolicy: leavePolicy,
     });
   } catch (error: any) {
     return res.status(500).json({
@@ -63,7 +63,7 @@ export const getCompanyLeaves = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "Company leave policies fetched successfully",
-      data: latestPolicy,
+      leavePolicy: latestPolicy,
     });
   } catch (error: any) {
     return res.status(500).json({
@@ -93,7 +93,7 @@ export const updateCompanyLeavePolicy = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "Company leave policy updated successfully",
-      data: latestPolicy,
+      leavePolicy: latestPolicy,
     });
   } catch (error: any) {
     return res.status(500).json({
