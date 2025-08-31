@@ -7,6 +7,7 @@ import { generateVerificationCode } from "../utils/generateVerificationCode";
 import { generateToken } from "../utils/generateToken";
 import { sendEmail, sendResetSuccessEmail, sendWelcomeEmaill, sendPasswordResetEmail } from "../utils/sendEmail";
 import { fetchLatestLeavePolicy } from "../service/leave.service";
+import mongoose from "mongoose";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -448,7 +449,12 @@ export const allUsers = async (req: Request, res: Response): Promise<void> => {
 
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
-        const user = await User.findById(req.params.id).select("-password");
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            res.status(400).json({ success: false, message: "Invalid user ID" });
+            return;
+        }
+        const user = await User.findById(id).select("-password");
         if (!user) {
             res.status(404).json({ success: false, message: "User not found" });
             return;

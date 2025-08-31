@@ -11,6 +11,7 @@ import { useEffect } from "react"
 import { useThemeStore } from "./store/useThemeStore"
 import Loading from "./components/Loading"
 import AllEmployees from "./admin/AllEmployees"
+import EmployeeDetailsPage from "./admin/EmployeeDetailsPage"
 
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
@@ -72,6 +73,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/admin/all-employees",
         element: <AllEmployees />
+      },
+      {
+        path: "/admin/all-employees/:id",
+        element: <EmployeeDetailsPage />
       },
 
       // Under construction page

@@ -23,6 +23,7 @@ type UserSummary = {
 type UserState = {
   user: CreateUserInputState | null;
   allUsers: UserSummary[] | null;
+  userById: CreateUserInputState | null;
   isAuthenticated: boolean;
   isCheckingAuth: boolean;
   loading: boolean;
@@ -37,6 +38,7 @@ type UserState = {
   updateProfile: (input: Partial<CreateUserInputState>) => Promise<void>;
   fetchAllUsers: () => Promise<void>;
   updateUsers: (input: Partial<CreateUserInputState>) => Promise<void>;
+  getUserById: (id: string) => Promise<CreateUserInputState | null>;
 };
 
 export const useUserStore = create<UserState>()(
@@ -44,6 +46,7 @@ export const useUserStore = create<UserState>()(
     (set, get) => ({
       user: null,
       allUsers: null,
+      userById: null,
       isAuthenticated: false,
       isCheckingAuth: true,
       loading: false,
@@ -66,6 +69,8 @@ export const useUserStore = create<UserState>()(
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Failed to create user");
           set({ loading: false });
+        } finally {
+          set({ loading: false });
         }
       },
 
@@ -86,6 +91,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Login failed");
+          set({ loading: false });
+        } finally {
           set({ loading: false });
         }
       },
@@ -110,6 +117,8 @@ export const useUserStore = create<UserState>()(
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Email verification failed");
           set({ loading: false });
+        } finally {
+          set({ loading: false });
         }
       },
 
@@ -129,6 +138,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch {
           set({ isAuthenticated: false, isCheckingAuth: false });
+        } finally {
+          set({ loading: false });
         }
       },
 
@@ -143,6 +154,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Logout failed");
+          set({ loading: false });
+        } finally {
           set({ loading: false });
         }
       },
@@ -197,6 +210,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Update failed");
+        } finally {
+          set({ loading: false });
         }
       },
 
@@ -210,6 +225,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Fetching users failed");
+          set({ loading: false });
+        } finally {
           set({ loading: false });
         }
       },
@@ -229,6 +246,24 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Updating users failed");
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      // get user by id
+      getUserById: async (id: string) => {
+        try {
+          set({ loading: true });
+          const response = await axios.get(`${API_END_POINT}/${id}`);
+          if (response.data.success) {
+            set({ userById: response.data.user, loading: false });
+          }
+          toast.error(response.data.message || "User not found");
+          return null;
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Failed to fetch user details");
+          return null;
         } finally {
           set({ loading: false });
         }

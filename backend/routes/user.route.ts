@@ -13,6 +13,6 @@ router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(isAuthenticated, resetPassword);
 router.route("/profile/update").put(isAuthenticated,updateUser);
 router.route("/all-users").get(isAuthenticated, allUsers);
-router.route("/user/:id").get(isAuthenticated, getUserById);
+router.route("/:id").get(isAuthenticated, getUserById);
 
 export default router;
