@@ -166,21 +166,6 @@ const CreateUser = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Header */}
-      {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-              <Sparkles className="text-white" size={20} />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">HR Portal</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Create New Employee</p>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Progress Bar */}
         <div className="mb-8">
@@ -520,7 +505,52 @@ const CreateUser = () => {
 
                   {/* Children Details */}
                   <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                    <h4 className="text-md font-semibold text-gray-900 dark:text-white mb-4">Children Details</h4>
+                    <h4 className="text-md font-semibold text-gray-900 dark:text-white mb-4">Child 1 Details</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <InputField 
+                        name="childName" 
+                        placeholder="Child Name" 
+                        icon={Users}
+                        value={formData.childName} 
+                        onChange={handleChange} 
+                        errors={errors} 
+                      />
+                      <InputField 
+                        name="childDob" 
+                        type="date" 
+                        placeholder="Child Date of Birth" 
+                        icon={Calendar}
+                        value={formData.childDob} 
+                        onChange={handleChange} 
+                        errors={errors} 
+                      />
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                          <Users size={18} />
+                        </div>
+                        <select 
+                          name="childGender" 
+                          value={formData.childGender || ''}
+                          onChange={handleChange}
+                          className="w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-600"
+                        >
+                          <option value="">Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <InputField 
+                        name="childRelationship" 
+                        placeholder="Relationship (Son/Daughter)" 
+                        value={formData.childRelationship} 
+                        onChange={handleChange} 
+                        errors={errors} 
+                      />
+                    </div>
+                  </div>
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                    <h4 className="text-md font-semibold text-gray-900 dark:text-white mb-4">Child 2 Details</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <InputField 
                         name="childName" 
@@ -596,17 +626,6 @@ const CreateUser = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Placeholder steps */}
-            {step > 3 && step < 7 && (
-              <div className="text-center py-12 animate-in slide-in-from-right-5">
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-full w-fit mx-auto mb-4">
-                  {React.createElement(steps[step].icon, { size: 32, className: "text-blue-500" })}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{steps[step].title}</h3>
-                <p className="text-gray-600 dark:text-gray-400">This section will be available in the next update.</p>
               </div>
             )}
 
@@ -733,7 +752,7 @@ const CreateUser = () => {
               </button>
 
               <div className="flex gap-3">
-                {step === 3 && (
+                {(step === 3 || step === 4 || step === 5 || step === 6 || step === 7) && (
                   <button
                     onClick={nextStep}
                     className="px-6 py-2.5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium rounded-xl transition-all duration-200"
