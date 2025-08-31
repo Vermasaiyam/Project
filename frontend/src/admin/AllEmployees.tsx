@@ -5,19 +5,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Eye, FilePenLine, Loader2 } from "lucide-react";
+import { Eye, FilePenLine, Loader2, Plus, Upload, Download, FilePlus } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import type { UserSummary } from "@/type/UserType";
 
-type UserSummary = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  workEmail: string;
-  employeeCode: string;
-  designation: string;
-  department: string;
-  status: "Active" | "On Notice" | "Resigned" | "Terminated";
-  profilePicture?: string;
-};
 
 const AllEmployees = () => {
   const navigate = useNavigate();
@@ -51,7 +42,49 @@ const AllEmployees = () => {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-white">All Employees</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">All Employees</h1>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="default"
+            onClick={() => navigate("/create-user")}
+            className="flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" /> Create New User
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" className="flex items-center gap-2">
+                <Upload className="h-4 w-4" /> Bulk Users
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem 
+                onClick={() => console.log("Upload CSV")}
+                className="flex items-center gap-2"
+              >
+                <Upload className="h-4 w-4" /> Upload CSV File
+              </DropdownMenuItem>
+
+              <DropdownMenuItem 
+                onClick={() => console.log("Download CSV Format")}
+                className="flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" /> Download CSV Format
+              </DropdownMenuItem>
+
+              <DropdownMenuItem 
+                onClick={() => console.log("Upload CSV Template")}
+                className="flex items-center gap-2"
+              >
+                <FilePlus className="h-4 w-4" /> Upload CSV Template
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {allUsers?.map((user: UserSummary) => (
           <Card
@@ -76,7 +109,7 @@ const AllEmployees = () => {
                 <p className="text-sm text-muted-foreground">{user.designation}</p>
               </div>
             </CardHeader>
-            <CardContent className="text-sm">
+            <CardContent className="text-sm space-y-1">
               <p className="text-muted-foreground">
                 <span className="font-semibold text-primary">ID:</span> {user.employeeCode}
               </p>
@@ -86,9 +119,10 @@ const AllEmployees = () => {
               <p className="text-muted-foreground truncate">
                 <span className="font-semibold text-primary">Email:</span> {user.workEmail}
               </p>
-              <Badge variant={getStatusVariant(user.status)} className="mt-2">
-                {user.status}
-              </Badge>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Badge variant={getStatusVariant(user.status)}>{user.status}</Badge>
+                {!user.isVerified && <Badge variant="destructive">Not Verified</Badge>}
+              </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
               <Button

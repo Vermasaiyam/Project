@@ -3,22 +3,10 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import axios from "axios";
 import type { LoginInputState, CreateUserInputState, ResetPasswordInputState } from "@/schema/userSchema";
 import { toast } from "sonner";
+import type { UserSummary } from "@/type/UserType";
 
 const API_END_POINT = import.meta.env.VITE_API_END_POINT_USER || "http://localhost:3000/api/user";
-
 axios.defaults.withCredentials = true;
-
-type UserSummary = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  workEmail: string;
-  employeeCode: string;
-  designation: string;
-  department: string;
-  status: "Active" | "On Notice" | "Resigned" | "Terminated";
-  profilePicture?: string;
-};
 
 type UserState = {
   user: CreateUserInputState | null;

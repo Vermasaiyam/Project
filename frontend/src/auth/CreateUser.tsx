@@ -158,7 +158,7 @@ const CreateUser = () => {
 
     try {
       await createUser(formData as CreateUserInputState);
-      navigate("/");
+      navigate("/admin/all-employees");
     } catch (error) {
       console.log(error);
     }

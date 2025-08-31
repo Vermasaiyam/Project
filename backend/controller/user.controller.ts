@@ -433,7 +433,7 @@ export const updateUser = async (req: Request, res: Response) => {
 export const allUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const allUsers = await User.find().select(
-            "firstName lastName workEmail employeeCode designation department status profilePicture"
+            "firstName lastName workEmail employeeCode designation department status profilePicture isVerified"
         );
 
         res.status(200).json({

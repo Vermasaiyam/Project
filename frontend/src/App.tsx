@@ -72,11 +72,15 @@ const appRouter = createBrowserRouter([
       // },
       {
         path: "/admin/all-employees",
-        element: <AllEmployees />
+        element: <AdminRoute><AllEmployees /></AdminRoute>
       },
       {
         path: "/admin/all-employees/:id",
-        element: <EmployeeDetailsPage />
+        element: <AdminRoute><EmployeeDetailsPage /></AdminRoute>
+      },
+      {
+        path: "/create-user",
+        element: <AdminRoute><CreateUser /></AdminRoute>,
       },
 
       // Under construction page
@@ -89,10 +93,6 @@ const appRouter = createBrowserRouter([
   {
     path: "/login",
     element: <AuthenticatedUser><Login /></AuthenticatedUser>,
-  },
-  {
-    path: "/create-user",
-    element: <AdminRoute><CreateUser /></AdminRoute>,
   },
   {
     path: "/forgot-password",
