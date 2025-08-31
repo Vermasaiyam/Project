@@ -94,6 +94,7 @@ export const createUserSchema = z.object({
   city: z.string().default("Update your city"),
   country: z.string().default("Update your country"),
   dateOfJoining: z.string().transform((val) => new Date(val)),
+  dob: z.string().transform((val) => new Date(val)),
   department: z.string().min(1, "Department is required."),
   designation: z.string().min(1, "Designation is required."),
   employmentType: z.enum(["Full-time", "Part-time", "Intern", "Contract"]),

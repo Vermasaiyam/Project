@@ -12,6 +12,7 @@ import { useThemeStore } from "./store/useThemeStore"
 import Loading from "./components/Loading"
 import AllEmployees from "./admin/AllEmployees"
 import EmployeeDetailsPage from "./admin/EmployeeDetailsPage"
+import ProfilePage from "./components/Profile"
 
 
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
@@ -70,6 +71,13 @@ const appRouter = createBrowserRouter([
       //   path: "/",
       //   element: <LandingPage />
       // },
+      {
+        path: "/profile",
+        element: <ProfilePage />
+      },
+
+
+      // admin routes
       {
         path: "/admin/all-employees",
         element: <AdminRoute><AllEmployees /></AdminRoute>

@@ -85,6 +85,7 @@ export interface IUser {
   city: string;
   country: string;
   dateOfJoining: Date;
+  dob: Date;
   department: string;
   designation: string;
   employmentType: "Full-time" | "Part-time" | "Intern" | "Contract";
@@ -147,6 +148,7 @@ const userSchema = new mongoose.Schema<IUserDocument>(
     city: { type: String, default: "Update your city" },
     country: { type: String, default: "Update your country" },
     dateOfJoining: { type: Date, required: true },
+    dob: { type: Date, required: true },
     department: { type: String, required: true },
     designation: { type: String, required: true },
     employmentType: {
