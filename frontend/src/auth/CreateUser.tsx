@@ -33,7 +33,8 @@ const steps: Step[] = [
   { id: "employment", title: "Employment", icon: Building, description: "Work history" },
   { id: "salary", title: "Salary Account", icon: CreditCard, description: "Banking details" },
   { id: "dependents", title: "Dependents", icon: Users, description: "Family info" },
-  { id: "leave", title: "Leave Balance", icon: Calendar, description: "Time off setup" }
+  { id: "leave", title: "Leave Balance", icon: Calendar, description: "Time off setup" },
+  { id: "review", title: "Review", icon: CheckCircle2, description: "Final review" }
 ];
 
 interface InputFieldProps {
@@ -121,19 +122,6 @@ const CreateUser = () => {
         aadharCardNumber: true,
         panCardNumber: true,
       });
-    } else if (step === 5) {
-      // Salary Account validation - only for required fields
-      const requiredFields = ['bankName', 'accountNumber', 'ifscCode', 'branchName'];
-      const hasRequiredFields = requiredFields.every(field => formData[field] && formData[field].trim() !== '');
-      if (!hasRequiredFields) {
-        setErrors({ 
-          bankName: !formData.bankName ? 'Bank name is required' : '',
-          accountNumber: !formData.accountNumber ? 'Account number is required' : '',
-          ifscCode: !formData.ifscCode ? 'IFSC code is required' : '',
-          branchName: !formData.branchName ? 'Branch name is required' : ''
-        });
-        return false;
-      }
     }
 
     if (!schema) return true;
@@ -149,7 +137,8 @@ const CreateUser = () => {
   };
 
   const nextStep = () => {
-    if (validateStep()) setStep(step + 1);
+    if (!validateStep()) return;
+    setStep((prev) => Math.min(prev + 1, steps.length - 1));
   };
 
   const prevStep = () => {
@@ -178,7 +167,7 @@ const CreateUser = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Header */}
-      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+      {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
@@ -190,7 +179,7 @@ const CreateUser = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Progress Bar */}
@@ -399,8 +388,7 @@ const CreateUser = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <InputField 
                     name="bankName" 
-                    placeholder="Bank Name *" 
-                    required
+                    placeholder="Bank Name" 
                     icon={CreditCard}
                     value={formData.bankName} 
                     onChange={handleChange} 
@@ -408,8 +396,7 @@ const CreateUser = () => {
                   />
                   <InputField 
                     name="accountNumber" 
-                    placeholder="Account Number *" 
-                    required
+                    placeholder="Account Number" 
                     icon={CreditCard}
                     value={formData.accountNumber} 
                     onChange={handleChange} 
@@ -417,8 +404,7 @@ const CreateUser = () => {
                   />
                   <InputField 
                     name="ifscCode" 
-                    placeholder="IFSC Code *" 
-                    required
+                    placeholder="IFSC Code" 
                     icon={CreditCard}
                     value={formData.ifscCode} 
                     onChange={handleChange} 
@@ -426,8 +412,7 @@ const CreateUser = () => {
                   />
                   <InputField 
                     name="branchName" 
-                    placeholder="Branch Name *" 
-                    required
+                    placeholder="Branch Name" 
                     icon={CreditCard}
                     value={formData.branchName} 
                     onChange={handleChange} 
@@ -757,7 +742,7 @@ const CreateUser = () => {
                   </button>
                 )}
 
-                {step < steps.length ? (
+                {step < steps.length - 1 ? (
                   <button
                     onClick={nextStep}
                     className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
