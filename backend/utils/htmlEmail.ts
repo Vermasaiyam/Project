@@ -60,16 +60,16 @@ export const htmlContent: string = `
     <body>
         <div class="container">
             <div class="header">
-                <h1>Verify Your Email</h1>
+                <h1>Verify Your Email for the HR Portal</h1>
             </div>
             <div class="content">
                 <h2>Hello,</h2>
-                <p>Thank you for registering with us. To complete your registration, please verify your email address by entering the following verification code:</p>
+                <p>Thank you for registering. To complete your setup, please verify your email address by entering the following verification code in the portal:</p>
                 <div class="code">{verificationToken}</div>
                 <p>If you did not request this verification, please ignore this email.</p>
             </div>
             <div class="footer">
-                <p>&copy; 2024 FEASTO. All rights reserved.</p>
+                <p>&copy; 2024 Our Company. All rights reserved.</p>
             </div>
         </div>
     </body>
@@ -114,17 +114,17 @@ export const generateWelcomeEmailHtml = (name: string) => {
             <body>
               <div class="email-container">
                 <div class="email-header">
-                  <h1>Welcome to FEASTO!</h1>
+                  <h1>Welcome to the HR Portal!</h1>
                 </div>
                 <div class="email-body">
                   <p>Hi ${name},</p>
-                  <p>Congratulations! Your email has been successfully verified.</p>
-                  <p>We are excited to have you on board at FEASTO. Explore our platform and enjoy our services.</p>
-                  <p>If you have any questions or need assistance, feel free to reach out to us.</p>
-                  <p>Best Regards,<br/>FEASTO Team</p>
+                  <p>Congratulations! Your email has been successfully verified and your account is active.</p>
+                  <p>We are excited to have you on board. You can now log in to the HR Portal to manage your profile, view company policies, and more.</p>
+                  <p>If you have any questions, feel free to reach out to the HR department.</p>
+                  <p>Best Regards,<br/>The HR Team</p>
                 </div>
                 <div class="email-footer">
-                  <p>&copy; 2024 FEASTO. All rights reserved.</p>
+                  <p>&copy; 2024 Our Company. All rights reserved.</p>
                 </div>
               </div>
             </body>
@@ -171,7 +171,7 @@ export const generatePasswordResetEmailHtml = (resetURL: string) => {
               margin: 20px 0;
               font-size: 16px;
               color: white;
-              background-color: #ffffff;
+              background-color: #007bff;
               text-decoration: none;
               border-radius: 5px;
             }
@@ -184,13 +184,13 @@ export const generatePasswordResetEmailHtml = (resetURL: string) => {
             </div>
             <div class="email-body">
               <p>Hi,</p>
-              <p>We received a request to reset your password. Click the button below to reset it.</p>
+              <p>We received a request to reset your password for the HR Portal. Click the button below to reset it.</p>
               <a href="${resetURL}" class="button">Reset Password</a>
-              <p>If you didn't request a password reset, please ignore this email.</p>
-              <p>Thank you,<br/> FEASTO Team</p>
+              <p>This link is valid for 30 minutes. If you didn't request a password reset, please ignore this email.</p>
+              <p>Thank you,<br/>The HR Team</p>
             </div>
             <div class="email-footer">
-              <p>&copy; 2024 FEASTO. All rights reserved.</p>
+              <p>&copy; 2024 Our Company. All rights reserved.</p>
             </div>
           </div>
         </body>
@@ -240,12 +240,12 @@ export const generateResetSuccessEmailHtml = () => {
             </div>
             <div class="email-body">
               <p>Hi,</p>
-              <p>Your password has been successfully reset. You can now log in with your new password.</p>
-              <p>If you did not request this change, please contact our support team immediately.</p>
-              <p>Thank you,<br/>FEASTO Team</p>
+              <p>Your password for the HR Portal has been successfully reset. You can now log in with your new password.</p>
+              <p>If you did not request this change, please contact the HR department immediately.</p>
+              <p>Thank you,<br/>The HR Team</p>
             </div>
             <div class="email-footer">
-              <p>&copy; 2024 FEASTO. All rights reserved.</p>
+              <p>&copy; 2024 Our Company. All rights reserved.</p>
             </div>
           </div>
         </body>

@@ -82,7 +82,7 @@ const appRouter = createBrowserRouter([
   },
   {
     path: "/create-user",
-    element: <AuthenticatedUser><CreateUser /></AuthenticatedUser>,
+    element: <AdminRoute><CreateUser /></AdminRoute>,
   },
   {
     path: "/forgot-password",
