@@ -28,6 +28,10 @@ type UserState = {
   updateUsers: (input: Partial<CreateUserInputState>) => Promise<void>;
   getUserById: (id: string) => Promise<CreateUserInputState | null>;
   deleteUserById: (id: string) => Promise<void>;
+
+  uploadUsersCSV: (file: File) => Promise<void>;
+  downloadCSVFormat: () => Promise<void>;
+  downloadCSVTemplate: () => Promise<void>;
 };
 
 export const useUserStore = create<UserState>()(
@@ -271,6 +275,71 @@ export const useUserStore = create<UserState>()(
           toast.error(error.response?.data?.message || "Failed to delete user");
         } finally {
           set({ loading: false });
+        }
+      },
+
+      // Bulk Upload Users via CSV
+      uploadUsersCSV: async (file: File) => {
+        try {
+          set({ loading: true });
+          const form = new FormData();
+          form.append("file", file);
+
+          const res = await axios.post(`${API_END_POINT}/bulk-upload`, form, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+
+          if (res.data.success) {
+            const { created, skipped, errors } = res.data.summary || {};
+            toast.success(
+              `Uploaded: ${created ?? 0} created, ${skipped ?? 0} skipped${
+                errors?.length ? `, ${errors.length} errors` : ""
+              }`
+            );
+            await get().fetchAllUsers();
+          }
+        } catch (err: any) {
+          toast.error(err.response?.data?.message || "Bulk upload failed");
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      // Download “CSV format” file
+      downloadCSVFormat: async () => {
+        try {
+          const res = await axios.get(`${API_END_POINT}/bulk-format`, {
+            responseType: "blob",
+          });
+          const url = URL.createObjectURL(res.data);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "users_format.csv";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } catch {
+          toast.error("Failed to download CSV format");
+        }
+      },
+
+      // Download template with a sample row
+      downloadCSVTemplate: async () => {
+        try {
+          const res = await axios.get(`${API_END_POINT}/bulk-template`, {
+            responseType: "blob",
+          });
+          const url = URL.createObjectURL(res.data);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "users_template.csv";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } catch {
+          toast.error("Failed to download CSV template");
         }
       },
     }),
